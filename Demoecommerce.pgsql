@@ -23,5 +23,5 @@ INSERT INTO USERS (ID,FIRST_NAME,LAST_NAME,CONTACT_NO,EMAIL_ID,ROLE_ID,DATE_CREA
     (9,'Michael', 'Taylor', '9870123456', 'michael@example.com', 3, '2024-02-26 16:00:00', '2023-02-26 16:00:00'),
     (10,'Emma', 'Garcia', '5552345678', 'emma@example.com', 1, '2024-02-26 17:00:00', '2023-02-26 17:00:00');
 	
-	
+
 	
