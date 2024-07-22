@@ -1,0 +1,399 @@
+1.
+
+CREATE TABLE admin (
+    admin_id SERIAL PRIMARY KEY,
+    admin_name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+/
+
+INSERT INTO admin (admin_name, password) VALUES
+('Alice Brown', 'password123'),
+('Bob White', 'securepass456'),
+('Charlie Black', 'adminpass789');
+
+
+select * from admin;
+
+2.
+
+CREATE TABLE admin_details (
+    admin_details_id SERIAL PRIMARY KEY,
+    admin_id INTEGER NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    contact_number VARCHAR(255) NOT NULL,
+    duration_from DATE NOT NULL,
+    duration_to DATE NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    token_amount DECIMAL(10, 2) NOT NULL,
+    pending_amount DECIMAL(10, 2) NOT NULL,
+    time_period DATE NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL,
+    created_at DATE NOT NULL,
+    FOREIGN KEY (admin_id) REFERENCES admin(admin_id)
+);
+
+
+INSERT INTO admin_details (
+    admin_id, full_name, email, contact_number, 
+    duration_from, duration_to, amount, token_amount, 
+    pending_amount, time_period, status, role, created_at
+) VALUES
+(1, 'Alice Brown', 'alice.brown@example.com', '1234567890', '2023-01-01', '2023-12-31', 5000.00, 1000.00, 4000.00, '2023-12-31', 'Active', 'Manager', '2023-01-01'),
+(2, 'Bob White', 'bob.white@example.com', '0987654321', '2023-02-01', '2023-11-30', 4500.00, 900.00, 3600.00, '2023-11-30', 'Inactive', 'Assistant Manager', '2023-02-01'),
+(3, 'Charlie Black', 'charlie.black@example.com', '5551234567', '2023-03-01', '2023-10-31', 4000.00, 800.00, 3200.00, '2023-10-31', 'Active', 'Supervisor', '2023-03-01');
+
+
+
+select * from admin_details;
+
+
+
+
+4.
+
+CREATE TABLE agent_data (
+    agent_data_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    contact_number varchar(20) NOT NULL,
+    joining_date DATE NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+
+
+/
+
+INSERT INTO agent_data (
+    full_name, email, contact_number, joining_date, status, password
+) VALUES
+('Alice Johnson', 'alice.johnson@example.com', 1234567890, '2023-01-15', 'Active', 'password123'),
+('Bob Smith', 'bob.smith@example.com', 9876543210, '2023-02-20', 'Inactive', 'securepass456'),
+('Charlie Brown', 'charlie.brown@example.com', 5551234567, '2023-03-10', 'Active', 'adminpass789');
+
+select * from agent_data;
+
+5.
+
+CREATE TABLE agent (
+    agent_id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL,
+    client_id INTEGER NOT NULL,
+    task_id INTEGER NOT NULL,
+    enquiry_id INTEGER NOT NULL,
+    booking_list_id INTEGER NOT NULL,
+    appointment_id INTEGER NOT NULL,
+    lead_id INTEGER NOT NULL,
+    payment_id INTEGER NOT NULL
+);
+
+
+/
+
+INSERT INTO agent (
+    property_id, client_id, task_id, enquiry_id, 
+    booking_list_id, appointment_id, lead_id, payment_id
+) VALUES
+(1, 1, 1, 1, 1, 1, 1, 1),
+(2, 2, 2, 2, 2, 2, 2, 2),
+(3, 3, 3, 3, 3, 3, 3, 3);
+
+select * from agent;
+
+
+6.
+
+CREATE TABLE properties (
+    Property_id INT PRIMARY KEY,
+    Address VARCHAR(255) NOT NULL,
+    City VARCHAR(255),
+    State VARCHAR(255),
+    Zip_Code VARCHAR(20),
+    Price DECIMAL(10, 2) NOT NULL,
+    Status VARCHAR(255),
+    Type VARCHAR(255),
+    Description VARCHAR(255),
+    Agent_id INT NOT NULL,
+    FOREIGN KEY (Agent_id) REFERENCES agent(agent_id)
+);
+
+/
+
+INSERT INTO properties (
+    Property_id, Address, City, State, Zip_Code, Price, Status, Type, Description, Agent_id
+) VALUES
+(1, '123 Main St', 'Anytown', 'CA', '12345', 350000.00, 'Available', 'Single Family', '3 bed, 2 bath, large backyard', 1),
+(2, '456 Oak St', 'Othertown', 'TX', '67890', 275000.00, 'Sold', 'Condo', '2 bed, 1 bath, community pool', 2),
+(3, '789 Pine St', 'Anycity', 'FL', '11223', 450000.00, 'Pending', 'Townhouse', '4 bed, 3 bath, two-car garage', 3);
+
+
+select * from properties;
+
+7.
+
+CREATE TABLE tasks (
+    task_id SERIAL PRIMARY KEY,
+    task_description VARCHAR(255),
+    priority VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    agent_id INTEGER NOT NULL,
+    due_date DATE NOT NULL,
+    due_time TIMESTAMP,
+    FOREIGN KEY (agent_id) REFERENCES agent(agent_id)
+);
+
+/
+INSERT INTO tasks (
+    task_description, priority, status, agent_id, due_date, due_time
+) VALUES
+('Prepare property listing', 'High', 'Pending', 1, '2023-07-01', '2023-07-01 09:00:00'),
+('Contact potential buyers', 'Medium', 'In Progress', 2, '2023-07-02', '2023-07-02 10:30:00'),
+('Schedule property viewing', 'Low', 'Completed', 3, '2023-07-03', '2023-07-03 15:00:00');
+
+
+8.
+
+CREATE TABLE booking_list (
+    booking_list_id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL,
+    agent_id INTEGER NOT NULL,
+    transaction_date DATE NOT NULL,
+    plot_no INTEGER NOT NULL,
+    token_amount DECIMAL(10, 2) NOT NULL,
+    pending_amount DECIMAL(10, 2) NOT NULL,
+    visit_id INTEGER NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    time_period TIMESTAMP NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    FOREIGN KEY (property_id) REFERENCES properties(Property_id),
+    FOREIGN KEY (agent_id) REFERENCES agent(agent_id)
+);
+
+
+/
+
+INSERT INTO booking_list (
+    property_id, agent_id, transaction_date, plot_no, 
+    token_amount, pending_amount, visit_id, total_amount, 
+    time_period, status
+) VALUES
+(1, 1, '2023-06-01', 101, 5000.00, 45000.00, 1, 50000.00, '2023-06-01 10:00:00', 'Pending'),
+(2, 2, '2023-06-02', 102, 7000.00, 63000.00, 2, 70000.00, '2023-06-02 11:00:00', 'Completed'),
+(3, 3, '2023-06-03', 103, 8000.00, 72000.00, 3, 80000.00, '2023-06-03 12:00:00', 'In Progress');
+
+
+select * from booking_list;
+
+
+9.
+
+CREATE TABLE payments (
+    payment_id SERIAL PRIMARY KEY,
+    booking_list_id INTEGER NOT NULL,
+    amount DECIMAL NOT NULL,
+    payment_date DATE NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    CONSTRAINT fk_booking_list
+        FOREIGN KEY (booking_list_id) 
+        REFERENCES booking_list (booking_list_id)
+);
+
+/
+
+INSERT INTO payments (booking_list_id, amount, payment_date, payment_method, status) VALUES
+(1, 150.75, '2023-06-01', 'Credit Card', 'Completed'),
+(2, 200.00, '2023-06-02', 'PayPal', 'Pending'),
+(3, 99.99, '2023-06-03', 'Bank Transfer', 'Completed');
+
+
+select * from payments;
+
+10.
+
+CREATE TABLE clients (
+    client_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(15) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    agent_id INTEGER NOT NULL,
+    CONSTRAINT fk_agent
+        FOREIGN KEY (agent_id) 
+        REFERENCES agent (agent_id)
+);
+
+/
+
+INSERT INTO clients (full_name, email, contact_number, address, agent_id) VALUES
+('David Wilson', 'david.wilson@example.com', '1231231234', '123 Maple Street, Springfield', 1),
+('Eva Green', 'eva.green@example.com', '4564564567', '456 Oak Avenue, Springfield', 2),
+('Frank Miller', 'frank.miller@example.com', '7897897890', '789 Pine Road, Springfield', 3);
+
+select * from clients;
+
+
+11.
+
+
+CREATE TABLE appointments (
+    appointment_id SERIAL PRIMARY KEY,
+    agent_id INTEGER NOT NULL,
+    client_id INTEGER NOT NULL,
+    property_id INTEGER NOT NULL,
+    appointment_date DATE NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    note VARCHAR(255),
+    CONSTRAINT fk_agent
+        FOREIGN KEY (agent_id) 
+        REFERENCES agent (agent_id),
+    CONSTRAINT fk_client
+        FOREIGN KEY (client_id) 
+        REFERENCES clients (client_id),
+    CONSTRAINT fk_property
+        FOREIGN KEY (property_id) 
+        REFERENCES properties (property_id)
+);
+
+/
+
+INSERT INTO appointments (agent_id, client_id, property_id, appointment_date, status, note) VALUES
+(1, 1, 1, '2023-07-01', 'Scheduled', 'Initial meeting with client.'),
+(2, 2, 2, '2023-07-02', 'Completed', 'Discussed property details.'),
+(3, 3, 3, '2023-07-03', 'Cancelled', 'Client unavailable.');
+
+
+select * from appointments;
+
+12.
+
+CREATE TABLE visits (
+    visit_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(15) NOT NULL,
+    pick_up_date DATE NOT NULL,
+    pick_up_location VARCHAR(255) NOT NULL,
+    drop_off_location VARCHAR(255) NOT NULL,
+    property_id INTEGER NOT NULL,
+    CONSTRAINT fk_property
+        FOREIGN KEY (property_id)
+        REFERENCES properties (property_id)
+);
+/
+
+INSERT INTO visits (name, contact_number, pick_up_date, pick_up_location, drop_off_location, property_id) VALUES
+('George White', '1112223333', '2023-08-01', '10 Downing Street, Springfield', '20 Baker Street, Springfield', 1),
+('Hannah Black', '2223334444', '2023-08-02', '15 Elm Street, Springfield', '25 Pine Avenue, Springfield', 2),
+('Ian Grey', '3334445555', '2023-08-03', '30 Maple Avenue, Springfield', '35 Oak Road, Springfield', 3);
+
+select * from visits;
+
+
+13.
+
+CREATE TABLE leads (
+    lead_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    contact_number VARCHAR(15) NOT NULL,
+    interested_in VARCHAR(255) NOT NULL,
+    agent_id INTEGER NOT NULL,
+    status VARCHAR(50),
+    note VARCHAR(255),
+    enquiry_id INTEGER,
+    CONSTRAINT fk_agent
+        FOREIGN KEY (agent_id)
+        REFERENCES agent_data (agent_id)
+);
+ALTER TABLE leads
+CONSTRAINT fk_enquiry_form FOREIGN KEY (enquiry_id) REFERENCES enquiry_form (enquiry_id);
+/
+
+
+INSERT INTO leads (full_name, email, contact_number, interested_in, agent_id, status, note, enquiry_id) VALUES
+('John Doe', 'john.doe@example.com', '1231231234', 'House', 1, 'New', 'Interested in a 3-bedroom house.', 1001),
+('Jane Smith', 'jane.smith@example.com', '4564564567', 'Apartment', 2, 'Contacted', 'Looking for a 2-bedroom apartment.', 1002),
+('Mike Johnson', 'mike.johnson@example.com', '7897897890', 'Condo', 3, 'Follow-Up', 'Wants to schedule a viewing.', 1003);
+
+select * from leads;
+
+14.
+
+CREATE TABLE enquiry_form (
+    enquiry_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(15) NOT NULL,
+    property_id INTEGER NOT NULL,
+    description VARCHAR(255),
+    CONSTRAINT fk_property
+        FOREIGN KEY (property_id)
+        REFERENCES properties (property_id)
+);
+
+/
+
+INSERT INTO enquiry_form (full_name, email, contact_number, property_id, description) VALUES
+('Alice Walker', 'alice.walker@example.com', '1112223333', 1, 'Interested in viewing the property.'),
+('Bob Green', 'bob.green@example.com', '2223334444', 2, 'Needs more information about the property.'),
+('Carol White', 'carol.white@example.com', '3334445555', 3, 'Would like to schedule a visit.');
+
+
+select * from enquiry_form;
+
+
+CREATE TABLE admin_data (
+    admin_data_id SERIAL PRIMARY KEY,
+    admin_id INTEGER NOT NULL,
+    property_id INTEGER NOT NULL,
+    agent_id INTEGER NOT NULL,
+    image_id INTEGER NOT NULL,
+    task_id INTEGER NOT NULL,
+    booking_list_id INTEGER NOT NULL,
+    payment_id INTEGER NOT NULL,
+    lead_id INTEGER NOT NULL,
+    visit_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    FOREIGN KEY (admin_id) REFERENCES admin(admin_id),
+    FOREIGN KEY (property_id) REFERENCES properties(property_id),
+    FOREIGN KEY (agent_id) REFERENCES agent(agent_id),
+    FOREIGN KEY (task_id) REFERENCES tasks(task_id),
+    FOREIGN KEY (booking_list_id) REFERENCES booking_list(booking_list_id),
+    FOREIGN KEY (payment_id) REFERENCES payments(payment_id),
+    FOREIGN KEY (lead_id) REFERENCES leads(lead_id),
+    FOREIGN KEY (visit_id) REFERENCES visits(visit_id)
+);
+
+INSERT INTO admin_data (admin_id, property_id, agent_id, image_id, task_id, booking_list_id, payment_id, lead_id, visit_id, project_id) VALUES
+(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(2, 2, 2, 2, 2, 2, 2, 2, 2, 2),
+(3, 3, 3, 3, 3, 3, 3, 3, 3, 3);
+
+
+select * from admin_data;
+
+
+ALTER TABLE agent ADD CONSTRAINT fk_property_id FOREIGN KEY (property_id) REFERENCES properties(property_id);
+ALTER TABLE AGENT ADD CONSTRAINT FK_client_id FOREIGN KEY (client_id) REFERENCES clients(client_id);
+ALTER TABLE AGENT ADD CONSTRAINT FK_task_id FOREIGN KEY (task_id) REFERENCES tasks(task_id);
+ALTER TABLE AGENT ADD CONSTRAINT FK_enquiry_id FOREIGN KEY (enquiry_id) REFERENCES enquiry_form(enquiry_id);
+ALTER TABLE AGENT ADD CONSTRAINT FK_booking_id FOREIGN KEY (booking_list_id) REFERENCES booking_list(booking_list_id);
+ALTER TABLE AGENT ADD CONSTRAINT FK_appointment_id FOREIGN KEY (appointment_id) REFERENCES appointments(appointment_id);
+ALTER TABLE AGENT ADD CONSTRAINT FK_leads_id FOREIGN KEY (lead_id) REFERENCES leads(lead_id);
+ALTER TABLE AGENT ADD CONSTRAINT FK_payment_id FOREIGN KEY (payment_id) REFERENCES payments(payment_id);
+
+ALTER TABLE booking_list add CONSTRAINT fk_visit_id FOREIGN KEY (visit_id) REFERENCES visits(visit_id);
+
+ALTER TABLE leads add CONSTRAINT fk_enquiry_form FOREIGN KEY (enquiry_id) REFERENCES enquiry_form (enquiry_id);
+
+
+ALTER TABLE agent add CONSTRAINT fk_enquiry_form FOREIGN KEY (enquiry_id) REFERENCES enquiry_form (enquiry_id);
+
+ALTER TABLE AGENT ADD COLUMN AGENT_DATA_ID INTEGER;
+ALTER TABLE agent ALTER COLUMN agent_data_id SET NOT NULL;
+ALTER TABLE agent add CONSTRAINT fk_agent_data_id FOREIGN KEY (agent_data_id) REFERENCES agent_data (agent_data_id);
+
